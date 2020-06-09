@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./history.js"></script>
+  <style>
+    *{
+      margin: 0;
+      padding: 0;
+    }
+    .pages{
+      height: 80px;
+      width: 100vw;
+      border: 1px solid red;
+      overflow: auto;
+    }
+    .item-wrap{
+      height: 100%;
+    }
+    .page-item{
+      width: 80px;
+      height: 80%;
+      background: gray;
+      margin-right: 10px;
+      margin-bottom: 10px;
+      float: left;
+    }
+    .page-item.active{
+      background: red;
+    }
+    .action{
+      text-align: center;
+    }
+    .action-item{
+      margin: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="pages">
+    <div class="item-wrap">
+      <!-- <div class="page-item"></div> -->
+    </div>
+  </div>
+  <div class="action">
+    <button class="action-item" id="back">后退</button>
+    <button class="action-item" id="forward">前进</button>
+    <span class="action-item"><button id="go">前进或后退</button><input id="num" type="text" placeholder="输入数字">页</span>
+    <span class="action-item"><button id="push">进入新地址</button><input id="url" type="text" placeholder="输入地址"></span>
+  </div>
+  <script> 
+    function render (history){
+      const list = history.urlList||[];
+      document.querySelector('.item-wrap').innerHTML = '';
+      list.forEach(item => {
+        const pageItem = document.createElement('div');
+        pageItem.innerText = item.url;
+        if(item.active){
+          pageItem.className = 'page-item active';
+        }else{
+          pageItem.className = 'page-item';
+        }
+        document.querySelector('.item-wrap').appendChild(pageItem);
+      });
+    }
+    const history = new History();
+    document.addEventListener('click',(e)=>{
+      if(e.target.id == 'forward'){
+        history.forward();
+      } else if(e.target.id == 'back'){
+        history.back();
+      }else if(e.target.id == 'go'){
+        history.go(Number(document.querySelector('#num').value));
+        document.querySelector('#num').value=null;
+      } else if(e.target.id == 'push'){
+        history.push(document.querySelector('#url').value);
+        document.querySelector('#url').value=null;
+      }
+      render(history);
+    },false);
+  </script>
+</body>
+</html>
